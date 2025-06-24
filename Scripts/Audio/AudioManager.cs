@@ -1,9 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
-using Pelax;
 using Pelax.Utils;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.InputSystem;
 
 namespace Pelax.Audio
 {
@@ -133,20 +133,16 @@ namespace Pelax.Audio
                 }
                 PlayNextSong();
             }
-            // if (Input.GetKeyDown(KeyCode.Alpha1))
+#if UNITY_EDITOR
+            // shortcut to verify loop
+            // if (Keyboard.current.digit7Key.wasPressedThisFrame)
             // {
             //     if (MusicAudioSource.clip != null)
             //     {
-            //         MusicAudioSource.time = MusicAudioSource.clip.length - 0.5f;
+            //         MusicAudioSource.time = MusicAudioSource.clip.length - 7;
             //     }
             // }
-            // if (Input.GetKeyDown(KeyCode.Alpha2))
-            // {
-            //     if (MusicAudioSource.clip != null)
-            //     {
-            //         MusicAudioSource.time = MusicAudioSource.clip.length - 6;
-            //     }
-            // }
+#endif
         }
     }
 }
