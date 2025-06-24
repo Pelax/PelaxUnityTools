@@ -72,9 +72,6 @@ namespace Pelax.Utils
                         }
                     }
                 }
-                Logit.Log(
-                    $"{typeof(T)} singleton Available method found nothing? " + (_instance == null)
-                );
                 return _instance;
             }
         }
