@@ -18,9 +18,6 @@ namespace Pelax.UI
         private Coroutine activeTransition;
 
         [SerializeField]
-        private bool isTransitioning;
-
-        [SerializeField]
         private bool isReady;
 
         private bool isDestroyed;
@@ -53,12 +50,6 @@ namespace Pelax.UI
             if (enable == isReady || isDestroyed)
                 return;
 
-            if (isTransitioning)
-            {
-                Logit.Warning($"{gameObject.name} tried to Toggle {enable} while transitioning!");
-                return;
-            }
-
             // enable object to play transition
             gameObject.SetActive(true);
 
@@ -73,7 +64,6 @@ namespace Pelax.UI
 
         private IEnumerator ToggleRoutine(bool enable)
         {
-            isTransitioning = true;
             if (enable)
             {
                 yield return PlayTransition(true);
@@ -82,13 +72,12 @@ namespace Pelax.UI
             }
             else
             {
-                yield return PlayTransition(false);
                 isReady = false;
+                yield return PlayTransition(false);
                 OnNotReady();
                 gameObject.SetActive(false);
             }
 
-            isTransitioning = false;
             activeTransition = null;
         }
 
