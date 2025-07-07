@@ -47,29 +47,50 @@ namespace Pelax.Utils
         private static string originalBunbleVersionLine;
 
 #if UNITY_ANDROID
-        [MenuItem("Tools/Build Android release for Play Store")]
+        [MenuItem("Builds/Build Android release for Play Store")]
         public static void BuildReleaseForPlayStore()
         {
-            PerformBuild(true);
+            PerformBuild(false, true);
         }
 #endif
 
 #if UNITY_WEBGL
-        [MenuItem("Tools/Build WebGL release")]
+        [MenuItem("Builds/Build WebGL release")]
 #elif UNITY_ANDROID
-        [MenuItem("Tools/Build Android release")]
+        [MenuItem("Builds/Build Android release")]
 #elif UNITY_IOS
-        [MenuItem("Tools/Build iOS release")]
+        [MenuItem("Builds/Build iOS release")]
 #elif UNITY_SERVER
-        [MenuItem("Tools/Build Dedicated Server")]
+        [MenuItem("Builds/Build Dedicated Server release")]
+#elif UNITY_WIN
+        [MenuItem("Builds/Build Windows release")]
 #endif
         public static void BuildRelease()
         {
-            PerformBuild(false);
+            PerformBuild(false, false);
         }
 
-        public static void PerformBuild(bool buildForPlayStore = false)
+#if UNITY_WEBGL
+        [MenuItem("Builds/Build WebGL development")]
+#elif UNITY_ANDROID
+        [MenuItem("Builds/Build Android development")]
+#elif UNITY_IOS
+        [MenuItem("Builds/Build iOS development")]
+#elif UNITY_SERVER
+        [MenuItem("Builds/Build Dedicated Server development")]
+#elif UNITY_WIN
+        [MenuItem("Builds/Build Windows development")]
+#endif
+        public static void BuildDevelopment()
         {
+            PerformBuild(true, false);
+        }
+
+        public static void PerformBuild(bool isDevelopment, bool buildForPlayStore)
+        {
+            BuildOptions buildOptions = isDevelopment
+                ? BuildOptions.Development
+                : BuildOptions.None;
             string gameName = Application.productName;
             string projectFolder = Path.GetDirectoryName(Application.dataPath);
             projectFolder = projectFolder.Replace('\\', '/');
@@ -90,8 +111,11 @@ namespace Pelax.Utils
             string lastFolderName = gameName + "_ios";
 #elif UNITY_SERVER
             string lastFolderName = gameName + "_server";
+#elif UNITY_WIN
+            string lastFolderName = gameName + "_win";
 #endif
             // Set the target folder per os
+            lastFolderName += isDevelopment ? "-dev" : "";
             string buildFolder = Path.Combine(projectFolder, "../builds/") + lastFolderName;
             // ensure the target folder exists
             if (!Directory.Exists(buildFolder))
@@ -110,6 +134,7 @@ namespace Pelax.Utils
             // Set the build options for WebGL
             BuildPlayerOptions buildPlayerOptions = new BuildPlayerOptions
             {
+                options = buildOptions,
                 scenes = scenePaths,
 #if UNITY_WEBGL
                 locationPathName = buildFolder,
@@ -125,6 +150,10 @@ namespace Pelax.Utils
                 target = BuildTarget.StandaloneLinux64,
                 targetGroup = BuildTargetGroup.Standalone,
                 subtarget = (int)StandaloneBuildSubtarget.Server
+#elif UNITY_WIN
+                locationPathName = buildFolder,
+                target = BuildTarget.StandaloneWindows64,
+                targetGroup = BuildTargetGroup.Standalone,
 #endif
             };
 
@@ -232,16 +261,29 @@ namespace Pelax.Utils
             return "0.1." + commitHashInt.ToString();
         }
 
-        [MenuItem("Tools/Upload to itch.io (release)")]
+        [MenuItem("Builds/Upload to itch.io (development)")]
+        public static void UploadItchioDevelopmentBuild()
+        {
+            UploadItchioBuild(true);
+        }
+
+        [MenuItem("Builds/Upload to itch.io (release)")]
         public static void UploadItchioReleaseBuild()
         {
-            string itchioChannel = "android";
+            UploadItchioBuild(false);
+        }
+
+        public static void UploadItchioBuild(bool isDevelopment)
+        {
+            string channelAndFolderSuffix = isDevelopment ? "-dev" : "";
+            string itchioChannel = "android" + channelAndFolderSuffix;
             string gameName = Application.productName;
             var version = GetVersion();
             string projectFolder = Path.GetDirectoryName(Application.dataPath);
             projectFolder = projectFolder.Replace('\\', '/');
             // defult values are android
-            string buildFolder = projectFolder + "/../builds/" + gameName + "_android";
+            string buildFolder =
+                projectFolder + "/../builds/" + gameName + "_android" + channelAndFolderSuffix;
             string uploadCommand =
                 @"cd "
                 + buildFolder
@@ -255,8 +297,9 @@ namespace Pelax.Utils
                 + @""" --userversion "
                 + version;
 #if UNITY_WEBGL
-            itchioChannel = "html";
-            buildFolder = projectFolder + "/../builds/" + gameName + "_web";
+            itchioChannel = "html" + channelAndFolderSuffix;
+            buildFolder =
+                projectFolder + "/../builds/" + gameName + "_web" + channelAndFolderSuffix;
             uploadCommand =
                 @"cd "
                 + buildFolder
