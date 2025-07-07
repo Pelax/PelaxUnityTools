@@ -6,6 +6,7 @@ namespace Pelax.Utils
     public class StatsDisplay : MonoBehaviour
     {
         public TMP_Text FPSText;
+        public TMP_Text VersionText;
         public float updateInterval = 0.5f;
 
         private float accum = 0;
@@ -14,6 +15,8 @@ namespace Pelax.Utils
 
         private void Start()
         {
+            if (VersionText)
+                VersionText.text = "version " + Application.version;
             timeleft = updateInterval;
         }
 
@@ -44,7 +47,6 @@ namespace Pelax.Utils
                 timeleft = updateInterval;
                 accum = 0;
                 frames = 0;
-
             }
         }
     }
