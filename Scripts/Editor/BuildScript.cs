@@ -8,6 +8,8 @@ namespace Pelax.Utils
 {
     public class BuildScript
     {
+        static string itchioUsername = "pelax";
+
         public static void ExecuteGitBashCommand(string command)
         {
             Logit.Log($"will execute command: {command}");
@@ -62,7 +64,7 @@ namespace Pelax.Utils
         [MenuItem("Builds/Build iOS release")]
 #elif UNITY_SERVER
         [MenuItem("Builds/Build Dedicated Server release")]
-#elif UNITY_WIN
+#elif UNITY_STANDALONE_WIN
         [MenuItem("Builds/Build Windows release")]
 #endif
         public static void BuildRelease()
@@ -78,7 +80,7 @@ namespace Pelax.Utils
         [MenuItem("Builds/Build iOS development")]
 #elif UNITY_SERVER
         [MenuItem("Builds/Build Dedicated Server development")]
-#elif UNITY_WIN
+#elif UNITY_STANDALONE_WIN
         [MenuItem("Builds/Build Windows development")]
 #endif
         public static void BuildDevelopment()
@@ -111,7 +113,7 @@ namespace Pelax.Utils
             string lastFolderName = gameName + "_ios";
 #elif UNITY_SERVER
             string lastFolderName = gameName + "_server";
-#elif UNITY_WIN
+#elif UNITY_STANDALONE_WIN
             string lastFolderName = gameName + "_win";
 #endif
             // Set the target folder per os
@@ -150,8 +152,8 @@ namespace Pelax.Utils
                 target = BuildTarget.StandaloneLinux64,
                 targetGroup = BuildTargetGroup.Standalone,
                 subtarget = (int)StandaloneBuildSubtarget.Server
-#elif UNITY_WIN
-                locationPathName = buildFolder,
+#elif UNITY_STANDALONE_WIN
+                locationPathName = buildFolder + "/" + gameName + "_win.exe",
                 target = BuildTarget.StandaloneWindows64,
                 targetGroup = BuildTargetGroup.Standalone,
 #endif
@@ -290,7 +292,9 @@ namespace Pelax.Utils
                 + " "
                 + @"&& butler push "
                 + gameName
-                + @"_android.apk ""pelax/"
+                + @"_android.apk """
+                + itchioUsername
+                + @"/"
                 + gameName
                 + ":"
                 + itchioChannel
@@ -304,7 +308,26 @@ namespace Pelax.Utils
                 @"cd "
                 + buildFolder
                 + " "
-                + @"&& butler push . ""pelax/"
+                + @"&& butler push . """
+                + itchioUsername
+                + @"/"
+                + gameName
+                + ":"
+                + itchioChannel
+                + @""" --userversion "
+                + version;
+#elif UNITY_STANDALONE_WIN
+            itchioChannel = "win" + channelAndFolderSuffix;
+            buildFolder =
+                projectFolder + "/../builds/" + gameName + "_win" + channelAndFolderSuffix;
+            uploadCommand =
+                @"cd "
+                + buildFolder
+                + " "
+                + @"&& find . -type d -name '*DoNotShip*' -exec rm -rf {} +"
+                + @"&& butler push . """
+                + itchioUsername
+                + @"/"
                 + gameName
                 + ":"
                 + itchioChannel
