@@ -52,6 +52,10 @@ namespace Pelax.UI
 
             // enable object to play transition
             gameObject.SetActive(true);
+            if (enable)
+            {
+                OnPreReady();
+            }
 
             if (activeTransition != null)
             {
@@ -116,10 +120,24 @@ namespace Pelax.UI
             } while (anyTransitionRunning);
         }
 
+        /// <summary>
+        /// Used to setup UIs before they transition in
+        /// </summary>
+        protected virtual void OnPreReady() { }
+
+        /// <summary>
+        /// UI is already visible and interactable
+        /// </summary>
         protected virtual void OnReady() { }
 
+        /// <summary>
+        /// UI is hidden and not interactable
+        /// </summary>
         protected virtual void OnNotReady() { }
 
+        /// <summary>
+        /// UI is being destroyed and new Toggle calls should be ignored
+        /// </summary>
         protected virtual void OnDestroy()
         {
             isDestroyed = true;
