@@ -135,13 +135,13 @@ namespace Pelax.Audio
             }
 #if UNITY_EDITOR
             // shortcut to verify loop
-            // if (Keyboard.current.digit7Key.wasPressedThisFrame)
-            // {
-            //     if (MusicAudioSource.clip != null)
-            //     {
-            //         MusicAudioSource.time = MusicAudioSource.clip.length - 7;
-            //     }
-            // }
+            if (Keyboard.current.digit7Key.wasPressedThisFrame)
+            {
+                if (MusicAudioSource.clip != null)
+                {
+                    MusicAudioSource.time = MusicAudioSource.clip.length - 7;
+                }
+            }
 #endif
         }
     }

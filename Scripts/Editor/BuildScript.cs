@@ -340,11 +340,5 @@ namespace Pelax.Utils
 #endif
             ExecuteGitBashCommand(uploadCommand);
         }
-
-        [MenuItem("Tools/Reset Player Prefs")]
-        public static void ResetPlayerPrefs()
-        {
-            PlayerPrefs.DeleteAll();
-        }
     }
 }

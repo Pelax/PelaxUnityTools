@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace Pelax.Utils
 {
@@ -127,5 +130,13 @@ namespace Pelax.Utils
             PlayerPrefs.DeleteAll();
 #endif
         }
+
+#if UNITY_EDITOR
+        [MenuItem("Tools/Reset Player Prefs")]
+        public static void ResetPlayerPrefs()
+        {
+            DeleteAll();
+        }
+#endif
     }
 }
