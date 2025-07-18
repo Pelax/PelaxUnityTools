@@ -20,8 +20,6 @@ namespace Pelax.UI
         [SerializeField]
         private bool isReady;
 
-        private bool isDestroyed;
-
         void OnValidate()
         {
             // find all transitions in this object and add them
@@ -47,7 +45,7 @@ namespace Pelax.UI
         /// </summary>
         public void Toggle(bool enable)
         {
-            if (enable == isReady || isDestroyed)
+            if (enable == isReady && gameObject.activeSelf == enable)
                 return;
 
             // enable object to play transition
@@ -134,13 +132,5 @@ namespace Pelax.UI
         /// UI is hidden and not interactable
         /// </summary>
         protected virtual void OnNotReady() { }
-
-        /// <summary>
-        /// UI is being destroyed and new Toggle calls should be ignored
-        /// </summary>
-        protected virtual void OnDestroy()
-        {
-            isDestroyed = true;
-        }
     }
 }
