@@ -124,7 +124,10 @@ namespace Pelax.Audio
 
         void Update()
         {
-            if (MusicAudioSource.clip != null && !MusicAudioSource.isPlaying)
+            if (
+                MusicAudioSource.clip != null
+                && MusicAudioSource.time >= MusicAudioSource.clip.length
+            )
             {
                 if (
                     CurrentPlaylist.Songs.Contains(MusicAudioSource.clip)
