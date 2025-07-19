@@ -35,11 +35,14 @@ namespace Pelax.Audio
         public int MaxSfxs = 10;
         public int CurrentSfxs = 0;
 
+        public float DefaultMusicVolume = 0.5f;
+        public float DefaultSfxVolume = 0.5f;
+
         IEnumerator InitVolumes()
         {
             yield return null;
-            SetMusicVolume(PlayerData.GetFloat(MusicVolume, 0.5f));
-            SetSfxVolume(PlayerData.GetFloat(SfxVolume, 0.5f));
+            SetMusicVolume(PlayerData.GetFloat(MusicVolume, DefaultMusicVolume));
+            SetSfxVolume(PlayerData.GetFloat(SfxVolume, DefaultSfxVolume));
             PlayPlaylist(0, false);
         }
 
