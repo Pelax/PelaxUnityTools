@@ -17,8 +17,17 @@ namespace Pelax.Utils
     {
         public static string BasePath = null;
 
+        public static string PerEditorInstanceKey(string key)
+        {
+#if UNITY_EDITOR
+            key = Application.dataPath + key;
+#endif
+            return key;
+        }
+
         public static void SetInt(string key, int value)
         {
+            key = PerEditorInstanceKey(key);
 #if UNITY_WEBGL
             SaveData(key, value.ToString());
 #else
@@ -28,6 +37,7 @@ namespace Pelax.Utils
 
         public static int GetInt(string key, int defaultValue = 0)
         {
+            key = PerEditorInstanceKey(key);
 #if UNITY_WEBGL
             return int.Parse(GetData(key, defaultValue.ToString()));
 #else
@@ -37,6 +47,7 @@ namespace Pelax.Utils
 
         public static void SetFloat(string key, float value)
         {
+            key = PerEditorInstanceKey(key);
 #if UNITY_WEBGL
             SaveData(key, value.ToString());
 #else
@@ -46,6 +57,7 @@ namespace Pelax.Utils
 
         public static float GetFloat(string key, float defaultValue = 0)
         {
+            key = PerEditorInstanceKey(key);
 #if UNITY_WEBGL
             return float.Parse(GetData(key, defaultValue.ToString()));
 #else
@@ -55,6 +67,7 @@ namespace Pelax.Utils
 
         public static void SetString(string key, string value)
         {
+            key = PerEditorInstanceKey(key);
 #if UNITY_WEBGL
             SaveData(key, value);
 #else
@@ -64,6 +77,7 @@ namespace Pelax.Utils
 
         public static string GetString(string key, string defaultValue = "")
         {
+            key = PerEditorInstanceKey(key);
 #if UNITY_WEBGL
             return GetData(key, defaultValue.ToString());
 #else
@@ -73,6 +87,7 @@ namespace Pelax.Utils
 
         public static bool HasKey(string key)
         {
+            key = PerEditorInstanceKey(key);
 #if UNITY_WEBGL
             CreateBasePath();
             string fullPath = Path.Combine(BasePath, key);
