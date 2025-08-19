@@ -11,9 +11,11 @@ namespace Pelax.Pooling
         public bool offScreenDestroy;
         public Vector2 offScreenOffsets = new(1.5f, 1.5f);
 
-        public delegate void PoolEventHandler(bool offScreen);
+        public delegate void OnPoolObjectSpawnedDelegate(PoolObject poolObject);
+        public event OnPoolObjectSpawnedDelegate OnPoolObjectSpawnedEvent;
 
-        public event PoolEventHandler OnObjectDestroyed;
+        public delegate void OnPoolObjectDestroyedDelegate(PoolObject poolObject, bool offScreen);
+        public event OnPoolObjectDestroyedDelegate OnPoolObjectDestroyedEvent;
 
         [Serializable]
         public class SingleAnimation
@@ -38,15 +40,17 @@ namespace Pelax.Pooling
 
         #region DESTROY STUFF
 
+
+
         private void TriggerOnDestroyEvent(bool offScreen)
         {
-            if (OnObjectDestroyed != null)
-                OnObjectDestroyed(offScreen);
+            OnPoolObjectDestroyedEvent?.Invoke(this, offScreen);
         }
 
         public virtual void Reset()
         {
             gameObject.SetActive(true);
+            OnPoolObjectSpawnedEvent?.Invoke(this);
         }
 
         public virtual void Disable(float DestroyTime)
