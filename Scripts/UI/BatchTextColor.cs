@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace Pelax.UI
 {
-    public class BatcTextColor : MonoBehaviour
+    public class BatchTextColor : MonoBehaviour
     {
         public List<TMP_Text> Texts;
         public Color Color;
