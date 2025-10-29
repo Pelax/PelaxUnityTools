@@ -46,8 +46,6 @@ namespace Pelax.Utils
             process.Close();
         }
 
-        private static string originalBunbleVersionLine;
-
 #if UNITY_ANDROID
         [MenuItem("Builds/Build Android release for Play Store")]
         public static void BuildReleaseForPlayStore()
@@ -174,8 +172,6 @@ namespace Pelax.Utils
 
             // Perform the WebGL build
             BuildPipeline.BuildPlayer(buildPlayerOptions);
-
-            RestoreProjectSettings();
         }
 
         private static void ModifyProjectSettings(
@@ -183,67 +179,11 @@ namespace Pelax.Utils
             bool increaseAndroidBundleVersionCode
         )
         {
-            string projectSettingsPath = "ProjectSettings/ProjectSettings.asset";
-            string[] projectSettingsLines = File.ReadAllLines(projectSettingsPath);
-            bool foundBundleVersionLine = false;
-
-            for (int i = 0; i < projectSettingsLines.Length; i++)
+            PlayerSettings.bundleVersion = buildVersion;
+            if (increaseAndroidBundleVersionCode)
             {
-                if (projectSettingsLines[i].StartsWith("  bundleVersion: "))
-                {
-                    originalBunbleVersionLine = projectSettingsLines[i];
-                    projectSettingsLines[i] = "  bundleVersion: " + buildVersion;
-                    foundBundleVersionLine = true;
-                }
-                if (increaseAndroidBundleVersionCode)
-                {
-                    if (projectSettingsLines[i].StartsWith("  AndroidBundleVersionCode: "))
-                    {
-                        var versionCode = int.Parse(projectSettingsLines[i].Substring(28));
-                        Logit.Log($"AndroidBundleVersionCode: {versionCode}");
-                        projectSettingsLines[i] =
-                            "  AndroidBundleVersionCode: " + (versionCode + 1);
-                        Logit.Log($"stuff written: {projectSettingsLines[i]}");
-                    }
-                }
+                PlayerSettings.Android.bundleVersionCode += 1;
             }
-
-            if (!foundBundleVersionLine)
-            {
-                Logit.Error("Failed to find 'bundleVersion' line in ProjectSettings.asset");
-                return;
-            }
-
-            File.WriteAllLines(projectSettingsPath, projectSettingsLines);
-        }
-
-        /// <summary>
-        /// This only restores the bundle version to the original value, it lets int the play store change
-        /// </summary>
-        private static void RestoreProjectSettings()
-        {
-            if (originalBunbleVersionLine == null)
-            {
-                Logit.Error("Original bundle version line not stored");
-                return;
-            }
-
-            string projectSettingsPath = "ProjectSettings/ProjectSettings.asset";
-            string[] projectSettingsLines = File.ReadAllLines(projectSettingsPath);
-
-            for (int i = 0; i < projectSettingsLines.Length; i++)
-            {
-                if (projectSettingsLines[i].StartsWith("  bundleVersion: "))
-                {
-                    projectSettingsLines[i] = originalBunbleVersionLine;
-                    break;
-                }
-            }
-
-            File.WriteAllLines(projectSettingsPath, projectSettingsLines);
-
-            // Clear the stored original bundle version
-            originalBunbleVersionLine = null;
         }
 
         private static string GetVersion()
