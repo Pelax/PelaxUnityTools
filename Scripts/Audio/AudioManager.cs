@@ -126,7 +126,10 @@ namespace Pelax.Audio
         {
             if (
                 MusicAudioSource.clip != null
-                && MusicAudioSource.time >= MusicAudioSource.clip.length
+                && (
+                    !MusicAudioSource.isPlaying
+                    || MusicAudioSource.time >= MusicAudioSource.clip.length
+                )
             )
             {
                 if (
@@ -139,6 +142,7 @@ namespace Pelax.Audio
                 }
                 PlayNextSong();
             }
+
 #if UNITY_EDITOR
             // shortcut to verify loop
             if (Keyboard.current.digit7Key.wasPressedThisFrame)
