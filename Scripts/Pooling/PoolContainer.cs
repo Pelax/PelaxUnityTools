@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Pelax.Utils;
 using UnityEngine;
 
 namespace Pelax.Pooling
@@ -37,8 +38,14 @@ namespace Pelax.Pooling
         {
             PoolObject instance = null;
 
-            for (int i = 0; i < poolInstances.Count; i++)
+            for (int i = poolInstances.Count - 1; i >= 0; i--)
             {
+                if (null == poolInstances[i])
+                {
+                    Logit.Error($"PoolContainer {name} instance is null, this should be prevented");
+                    poolInstances.RemoveAt(i);
+                    continue;
+                }
                 if (!poolInstances[i].gameObject.activeSelf)
                 {
                     instance = poolInstances[i];
