@@ -47,7 +47,7 @@ namespace Pelax.Utils
         }
 
 #if UNITY_ANDROID
-        [MenuItem("Builds/Build Android release for Play Store")]
+        [MenuItem("Tools/Pelax/Build Android release for Play Store")]
         public static void BuildReleaseForPlayStore()
         {
             PerformBuild(false, true);
@@ -55,15 +55,15 @@ namespace Pelax.Utils
 #endif
 
 #if UNITY_WEBGL
-        [MenuItem("Builds/Build WebGL release")]
+        [MenuItem("Tools/Pelax/Build WebGL release")]
 #elif UNITY_ANDROID
-        [MenuItem("Builds/Build Android release")]
+        [MenuItem("Tools/Pelax/Build Android release")]
 #elif UNITY_IOS
-        [MenuItem("Builds/Build iOS release")]
+        [MenuItem("Tools/Pelax/Build iOS release")]
 #elif UNITY_SERVER
-        [MenuItem("Builds/Build Dedicated Server release")]
+        [MenuItem("Tools/Pelax/Build Dedicated Server release")]
 #elif UNITY_STANDALONE_WIN
-        [MenuItem("Builds/Build Windows release")]
+        [MenuItem("Tools/Pelax/Build Windows release")]
 #endif
         public static void BuildRelease()
         {
@@ -71,15 +71,15 @@ namespace Pelax.Utils
         }
 
 #if UNITY_WEBGL
-        [MenuItem("Builds/Build WebGL development")]
+        [MenuItem("Tools/Pelax/Build WebGL development")]
 #elif UNITY_ANDROID
-        [MenuItem("Builds/Build Android development")]
+        [MenuItem("Tools/Pelax/Build Android development")]
 #elif UNITY_IOS
-        [MenuItem("Builds/Build iOS development")]
+        [MenuItem("Tools/Pelax/Build iOS development")]
 #elif UNITY_SERVER
-        [MenuItem("Builds/Build Dedicated Server development")]
+        [MenuItem("Tools/Pelax/Build Dedicated Server development")]
 #elif UNITY_STANDALONE_WIN
-        [MenuItem("Builds/Build Windows development")]
+        [MenuItem("Tools/Pelax/Build Windows development")]
 #endif
         public static void BuildDevelopment()
         {
@@ -203,13 +203,13 @@ namespace Pelax.Utils
             return "0.1." + commitHashInt.ToString();
         }
 
-        [MenuItem("Builds/Upload to itch.io (development)")]
+        [MenuItem("Tools/Pelax/Upload to itch.io (development)")]
         public static void UploadItchioDevelopmentBuild()
         {
             UploadItchioBuild(true);
         }
 
-        [MenuItem("Builds/Upload to itch.io (release)")]
+        [MenuItem("Tools/Pelax/Upload to itch.io (release)")]
         public static void UploadItchioReleaseBuild()
         {
             UploadItchioBuild(false);

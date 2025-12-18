@@ -147,7 +147,7 @@ namespace Pelax.Utils
         }
 
 #if UNITY_EDITOR
-        [MenuItem("Tools/Reset Player Prefs")]
+        [MenuItem("Tools/Pelax/Reset Player Prefs")]
         public static void ResetPlayerPrefs()
         {
             DeleteAll();
