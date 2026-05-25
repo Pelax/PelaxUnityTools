@@ -15,8 +15,9 @@ namespace Pelax.Utils
 
         protected virtual void Awake()
         {
-            if (IsInstanced)
+            if (IsInstanced && _instance != this)
             {
+                gameObject.SetActive(false);
                 Destroy(gameObject);
                 return;
             }
