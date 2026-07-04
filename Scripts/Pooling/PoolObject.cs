@@ -11,6 +11,9 @@ namespace Pelax.Pooling
         public bool offScreenDestroy;
         public Vector2 offScreenOffsets = new(1.5f, 1.5f);
 
+        [HideInInspector]
+        public PoolContainer Container;
+
         public delegate void OnPoolObjectSpawnedDelegate(PoolObject poolObject);
         public event OnPoolObjectSpawnedDelegate OnPoolObjectSpawnedEvent;
 
@@ -69,6 +72,14 @@ namespace Pelax.Pooling
         public void DelayedDisable()
         {
             gameObject.SetActive(false);
+        }
+
+        protected virtual void OnDestroy()
+        {
+            // Pooled objects can be destroyed externally (e.g. an FX parented to an
+            // enemy dies with the enemy hierarchy); remove the stale pool reference
+            if (Container)
+                Container.RemoveInstance(this);
         }
 
         #endregion

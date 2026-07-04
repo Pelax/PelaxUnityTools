@@ -27,11 +27,17 @@ namespace Pelax.Pooling
 
             clone.transform.SetParent(transform, false);
             clone.name = prefab.name;
+            clone.Container = this;
             if (useLocalPosition)
                 clone.transform.localPosition = pos;
 
             poolInstances.Add(clone);
             return clone;
+        }
+
+        public void RemoveInstance(PoolObject instance)
+        {
+            poolInstances.Remove(instance);
         }
 
         public PoolObject GetNextObject(Vector3 pos, bool useLocalPosition)
